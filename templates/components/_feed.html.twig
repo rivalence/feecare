@@ -1,0 +1,115 @@
+{% for feed in feeds %}
+<div class="bg-white container d-flex justify-content-center pt-2 pb-2" style="width: 60%;">
+    <div style="width: 100%; display: none;" id="boxPost" data-hidden="true">
+        <div class="d-flex mb-3">
+            <img src="https://cdn-icons-png.flaticon.com/512/57/57134.png" alt="" class="img-fluid rounded-circle mr-3" 
+            style="width: 5%; height: 5%;">
+            <div>
+                <p>{{ feed.post.auteur.nom }} {{ feed.post.auteur.prenom }}</p>
+                <p>{{ feed.post.datePost|date('d-m-Y') }} à {{ feed.post.timePost|date('H:i') }} </p>
+            </div>
+            
+        </div>
+
+        <div class="mb-2">
+        <p> {{ feed.post.legend }} </p>
+        </div>
+
+        <div class="text-center">
+            <img id="show-img" data-idpost="{{feed.post.idPost}}" class="rounded mb-2 img-fluid" 
+            style="height : 600px; width: 600px; cursor: pointer;" src= {{ asset('uploads/files/' ~ feed.post.dataPost) }} 
+            <alt= {{ feed.post.legend }}>
+            
+        </div>
+        <hr>
+        
+        <div class="row mb-4">
+            <div id="show-likes" class="mb-2" data-idpost="{{feed.post.idPost}}">
+                <span id="show-likes-{{ feed.post.idPost }}"> 
+                    {{ feed.nbLikes.count < 2 ? feed.nbLikes.count ~ ' Like' : feed.nbLikes.count ~ ' Likes' }} 
+                </span>
+            </div>
+            
+
+            <div class="col d-grid gap-2">
+                {% set var = false %}
+                {% for liked_post in liked_posts %}
+                    {% if feed.post.idPost == liked_post.getliked.idPost %}
+                        {% set var = true %}
+                    {% endif %}    
+                {% endfor %}
+
+                <a class="btn {{ var ? 'btn-primary' : 'btn-light' }}" href="{{ path('app_like', {idPost: feed.post.idPost}) }}" 
+                type="button" data-action="like" data-nbLike="{{ feed.nbLikes.count }}" data-idpost="{{ feed.post.idPost }}">
+                J'aime</a>
+            </div>
+            <div class="col d-grid gap-2" id="btn-comment" data-idpost={{ feed.post.idPost }}>
+                <a class="btn btn-outline-primary">Commentaires</a>
+            </div>
+        </div>
+        <hr>
+        
+        <div class="form-floating">
+            {{form_start(feed.formComment, {'attr' : {  
+            'data-action' : 'comment'}})}}   
+                {{ form_widget(feed.formComment.contenu, {'attr' : { 'style' : '50px', 'name' : 'commentText'}}) }}
+                {{ form_widget(feed.formComment.postId, {'attr' : { 'value' : feed.post.idPost }}) }}
+                <button class="btn btn-outline-secondary" type="submit">Envoyer</button>
+            {{ form_end(feed.formComment) }}
+        </div>
+
+        <span id="new-comment-{{feed.post.idPost}}" class="mt-4"></span>
+        <hr>
+    </div>
+
+    <div class="modal-comment-{{feed.post.idPost}}">
+        <div class="modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                {% for comment in feed.comments %}
+                    {% if comment.post.idPost == feed.post.idPost %}
+                        <div id="comment-content" class="comment-container">
+                            <div class="comment-style">
+                                <p> {{ comment.auteur.nom }} {{ comment.auteur.nom }}</p>
+                                <p> {{ comment.contenu }}</p><hr>
+                            </div>
+                            
+                        </div>    
+                    {% endif %}    
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-like-{{feed.post.idPost}}">
+        <div class="modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                {% if feed.nbLikes.count > 0 %}
+                <ul class="list-group list-group-flush" id="list-like">
+                    {% for likeName in feed.listLikesNames %}
+                    <li class="list-group-item" id="{{likeName}}">
+                        {{ likeName }}</li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}    
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-img-{{feed.post.idPost}}">
+        <div class="modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <div style="display: flex; justify-content : center; align-items : center;">
+                    <img style="height: 60%; width: 60%;" src= {{ asset('uploads/files/' ~ feed.post.dataPost) }}>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endfor %}
+
+<button type="button" id="load-more">Charger plus de posts</button>

@@ -1,0 +1,49 @@
+{% extends 'baseEducateur.html.twig' %}
+
+{% block title %}Feecare - Rendez-vous{% endblock %}
+
+{% block body %}>
+
+<div class="container-fluid bg-body-secondary">
+    <div class="row">
+        <div class="container mt-4 col-4">
+            {% if rdv_list %}
+            <h1 class="display-1 text-center mb-5">Mes Rendez-vous</h1>
+            <table class="table border">
+                <thead>
+                <tr>
+                    <th scope="col">Nom du traitant</th>
+                    <th scope="col">Prenom du traitant</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Heure</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for rdv in rdv_list %}
+                        <tr>
+                            <td>{{ rdv.nom }}</td>
+                            <td>{{ rdv.prenom }}</td>
+                            <td>{{ rdv[0].dateRdv|date('d/M/y') }}</td>
+                            <td>{{ rdv[0].timeRdv|date('H:i') }}</td>
+                            <td>{{ form_start(rdv.annuleForm) }}
+                                    {{ form_row(rdv.annuleForm.id, {'attr' : { 'value' : rdv[0].idRdv }}) }}
+                                    {{ form_row(rdv.annuleForm.submit) }}
+                                {{ form_end(rdv.annuleForm) }}
+                            </td>
+
+                            <td><a class="btn btn-outline-success" href="{{ path('app_rdv_assure', {idRdv: rdv[0].idRdv}) }}">Assuré</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                
+                </tbody>
+            </table>
+
+            {% else %}
+                <h1 class="display-1 text-center mb-5">Vous n'avez aucun rendez-vous...</h1>
+            {% endif %}
+            
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="App\Entity\Likes" table="likes">
+    <indexes>
+      <index name="IDX_49CA4E7DFA0A66F9" columns="getliked"/>
+      <index name="IDX_49CA4E7DF14AFF1E" columns="give_like"/>
+    </indexes>
+    <id name="idLike" type="integer" column="id_like">
+      <generator strategy="SEQUENCE"/>
+      <sequence-generator sequence-name="likes_id_like_seq" allocation-size="1" initial-value="1"/>
+    </id>
+    <many-to-one field="getliked" target-entity="Post" fetch="LAZY">
+      <join-columns>
+        <join-column name="getliked" referenced-column-name="id_post"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="giveLike" target-entity="Users" fetch="LAZY">
+      <join-columns>
+        <join-column name="give_like" referenced-column-name="id_user"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

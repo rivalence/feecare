@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin - Add ID{% endblock %}
+
+{% block body %}
+
+<div class="container-admin mt-4 bg-body-secondary">
+    <a href="/actualite" class="btn btn-outline-secondary">Retour à l'Accueil</a>
+    <div class="centered-element bg-body-secondary m-4">
+        {% for messages in app.flashes(['id_exist', 'id_success']) %}
+                    {% for message in messages %}
+                        <div class="alert alert-success text-center">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+        {{ form(form) }}
+    </div>
+</div>
+{% endblock %}

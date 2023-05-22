@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="App\Entity\Besoin" table="besoin">
+    <indexes>
+      <index name="IDX_8118E811E36F6CE7" columns="centre_key"/>
+    </indexes>
+    <id name="idBesoin" type="integer" column="id_besoin">
+      <generator strategy="SEQUENCE"/>
+      <sequence-generator sequence-name="besoin_id_besoin_seq" allocation-size="1" initial-value="1"/>
+    </id>
+    <field name="intitule" type="text" column="intitule" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <many-to-one field="centreKey" target-entity="Centre" fetch="LAZY">
+      <join-columns>
+        <join-column name="centre_key" referenced-column-name="id_centre"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="App\Entity\Traiter" table="traiter">
+    <indexes>
+      <index name="IDX_D4A42E866971227" columns="educateur_key"/>
+      <index name="IDX_D4A42E86B062378" columns="famille_key"/>
+    </indexes>
+    <id name="idTraiter" type="integer" column="id_traiter">
+      <generator strategy="SEQUENCE"/>
+      <sequence-generator sequence-name="traiter_id_traiter_seq" allocation-size="1" initial-value="1"/>
+    </id>
+    <many-to-one field="educateurKey" target-entity="Users" fetch="LAZY">
+      <join-columns>
+        <join-column name="educateur_key" referenced-column-name="id_user"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="familleKey" target-entity="Users" fetch="LAZY">
+      <join-columns>
+        <join-column name="famille_key" referenced-column-name="id_user"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

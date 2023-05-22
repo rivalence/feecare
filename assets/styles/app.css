@@ -1,0 +1,565 @@
+.modal {
+  display: none;
+  /* Hidden by default */
+  position: fixed;
+  /* Stay in place */
+  z-index: 1;
+  /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%;
+  /* Full width */
+  height: 100%;
+  /* Full height */
+  overflow: auto;
+  /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0);
+  /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4);
+  /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: #fefefe;
+  margin: 20% auto;
+  /* 15% from the top and centered */
+  padding: 20px;
+  top: 20px;
+  border: 1px solid #888;
+  width: 60%;
+  /* Could be more or less, depending on screen size */
+  border-radius: 10px;
+}
+
+.comment-container {
+  display: flex;
+  justify-content: left;
+  align-items: start;
+}
+
+/* The Close Button */
+.close-modal {
+  top: 5px;
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close-modal:hover,
+.close-modal:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+#show-likes {
+  cursor: pointer;
+}
+
+/*chat liste conversations famille*/
+.users {
+  padding: 25px 30px;
+}
+
+.users header,
+.users-list a {
+  display: flex;
+  align-items: center;
+  padding-bottom: 20px;
+  justify-content: space-between;
+  border-bottom: 1px solid #e6e6e6;
+}
+
+:is(.users, .users-list) .content {
+  display: flex;
+  align-items: center;
+}
+
+:is(.users, .users-list) .details {
+  color: #000;
+  margin-left: 15px;
+}
+
+:is(.users, .users-list) .details span {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+
+.users header .content h1 {
+  font-size: 30px;
+  font-weight: 300;
+}
+
+.users .input-group {
+  margin: 20px 0;
+  display: flex;
+  position: relative;
+  align-items: center;
+  justify-content: space-between;
+
+
+}
+
+
+.users .input-group input {
+  position: absolute;
+  height: 42px;
+  width: calc(100% - 50px);
+  padding: 0 13px;
+  font-size: 16px;
+  border-radius: 5px 0 0 5px;
+  outline: none;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+.users .input-group input.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.users .input-group button {
+  width: 47px;
+  height: 42px;
+  border: none;
+  color: #fff;
+  /*background: #333;*/
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+  font-size: 17px;
+}
+
+.users .input-group button.active {
+  background: #c67cc0;
+}
+
+.users-list::-webkit-scrollbar {
+  width: 1px;
+}
+
+.users-list {
+  max-height: 350px;
+  overflow-y: auto;
+}
+
+.users-list a {
+  margin-bottom: 10px;
+  page-break-after: 10px;
+  padding-right: 15px;
+  border-bottom-color: #c67cc0;
+}
+
+/*
+.users-list a:last-child {
+  border: none;
+  margin-bottom: 0px;
+}*/
+
+.users-list a .content p {
+  color: #67676a;
+}
+
+
+/* chat Area style */
+.chat-area header {
+  display: flex;
+  align-items: center;
+  padding: 18px 30px;
+}
+
+.chat-area header .back-icon {
+  font-size: 18px;
+  color: purple;
+}
+
+.chat-area header h1 {
+  font-size: 30px;
+  font-weight: 500;
+}
+
+.chat-box {
+  height: 500px;
+
+  display: flex;
+  overflow-y: auto;
+  flex-direction: column-reverse;
+  scroll-behavior: smooth;
+  background: #e8f7fa;
+  margin-left: 150px;
+  margin-right: 150px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 10px 30px 20px 30px;
+  box-shadow: inset 0 32px 32px -32px rgb(0 0 0 / 5%),
+    inset 0 32px 32px -32px rgb(0 0 0 / 5%);
+
+}
+
+.chat-box .chat {
+  margin: 1px 0;
+}
+
+.chat-box .chat p {
+  word-wrap: break-word;
+  padding: 4px 15px;
+  box-shadow: 0 0 32px rgb(0 0 0 / 8%),
+    0 16px 16px -16px rgb(0 0 0 / 10%);
+}
+
+.chat-box .outgoing {
+  display: flex;
+}
+
+.outgoing .details {
+  margin-left: auto;
+  max-width: calc(100% - 130px);
+}
+
+.outgoing .details p {
+  background: #465948;
+  color: #e6e6e6;
+  border-radius: 18px 18px 0 18px;
+}
+
+.chat-box .incoming {
+  display: flex;
+  align-items: flex-end;
+}
+
+.incoming .details {
+  margin-left: 10px;
+  margin-right: auto;
+  max-width: calc(100% - 130px);
+}
+
+.incoming .details p {
+  background: #c67cc0;
+  color: #333;
+  border-radius: 18px 18px 18px 0;
+}
+
+.chat-area .typing-area {
+  padding: 8px 30px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.content {
+  margin-left: 30px
+}
+
+.typing-area input {
+  height: 45px;
+  width: calc(100% -58px);
+  font-size: 17px;
+  border: 1px solid #ccc;
+  padding: 0 13px;
+  border-radius: 5px 0 0 5px;
+  outline: none;
+}
+
+.typing-area button {
+  border-radius: 0 5px 5px 0;
+}
+
+
+/*Map-----------------------------------*/
+
+/*@import "~bootstrap";*/
+/* Utiliser une police personnalisée */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap');
+
+.map-body {
+  font-family: 'Open Sans', sans-serif;
+  margin: 0;
+  background-color: #f5e9d6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Centrer le titre principal */
+.titre {
+  text-align: center;
+  font-size: 60px;
+  font-weight: 250;
+  /*font-weight: bolder;*/
+  margin-top: 40px;
+  margin-bottom: 50px;
+  color: rgb(14, 13, 13);
+}
+
+#titre-ajout-centre {
+  text-align: center;
+  font-size: 50px;
+  font-weight: 100;
+  margin-top: 3px;
+  margin-bottom: 50px;
+  color: rgb(16, 16, 15);
+}
+
+/* Centrer le champ de texte*/
+#ville-partie {
+  display: flex;
+  /*justify-content: center;*/
+  /*justify-content: flex-end;*/
+  align-items: center;
+  margin-bottom: 0.5px;
+}
+
+#ville-label {
+  margin-right: 10px;
+  font-weight: bold;
+  /*order: 2;*/
+}
+
+#champ-ville {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 2px solid #ccc;
+  outline: none;
+  transition: border-color 0.3s ease-in-out;
+  min-width: 200px;
+  /*order: 1;*/
+}
+
+#champ-ville:focus {
+  border-color: #007bff;
+}
+
+/* Styles pour la carte et la liste*/
+#carte-liste {
+  display: grid;
+  grid-template-columns: 70% 30%;
+  width: 100%;
+
+  /*
+    display: flex;
+    flex-direction: row;
+    /* justify-content: center;*/
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+/* Styles pour la carte */
+#carte {
+  height: 500px;
+  margin-right: 20px;
+}
+
+/* Styles pour les boutons de la carte */
+.leaflet-routing-container.leaflet-bar {
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.leaflet-routing-container.leaflet-bar a {
+  display: block;
+  width: 30px;
+  height: 30px;
+  margin: 5px;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 30px;
+  font-size: 20px;
+  color: #007bff;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+.leaflet-routing-container.leaflet-bar a:hover {
+  background-color: #007bff;
+  color: #fff;
+}
+
+/* Style pour le texte sous la carte */
+p {
+  text-align: center;
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+/*-----------------liste adresse ---------------------------------------------------*/
+
+#address-list {
+  /*list-style-type: none;
+  margin: 0;
+  padding: 0;
+  /* width: 30%;*/
+  /* background-color: #b6abab;
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  overflow-y: auto*/
+  background-color: #fefefe;
+  /* margin: 20% auto;
+   15% from the top and centered */
+  padding: 20px;
+  top: 20px;
+  border: 1px solid #888;
+  overflow-y: auto;
+  overflow: hidden;
+  cursor: pointer;
+  height: 500px;
+  /* Could be more or less, depending on screen size */
+
+
+}
+
+#address-list li {
+  display: block;
+  color: #333;
+  padding: 12px 16px;
+  text-decoration: none;
+  transition: background-color 0.3s;
+}
+
+#address-list li:hover {
+  background-color: #ddd;
+}
+
+#address-list li:active {
+  background-color: #e0d8d8;
+}
+
+#address-list select {
+  display: none;
+  width: 100%;
+  padding: 12px 16px;
+  border: none;
+  box-shadow: none;
+  background-color: transparent;
+  appearance: none;
+  outline: none;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 600px) {
+  #address-list select {
+    display: block;
+  }
+
+  #address-list li {
+    display: none;
+  }
+}
+
+/*selection case*/
+.selected {
+  background-color: #b89ef2;
+}
+
+/* choix itineraire*/
+.choix-itineraire {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1px;
+}
+
+#search-btn {
+  background: #f5e9d6;
+
+  /* padding: 10px 20px;
+  /*background-color: #4d75c5;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  margin-right: 10px;
+  cursor: pointer;*/
+}
+
+#search-btn:hover {
+  background-color: #313d61;
+  box-shadow: 0px 5px 8px rgba(0, 0, 0, 0.3);
+}
+
+#recherche-map {
+  background-color: #7f7f82;
+  width: 100%;
+  /* 15% from the top and centered */
+  padding: 20px;
+  top: 20px;
+  border: 1px solid #595757;
+
+
+}
+
+#my-location-btn {
+  /*padding: 10px 20px;
+  background-color: #4d75c5;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  margin-right: 10px;
+  cursor: pointer;*/
+}
+
+#my-location-btn:hover {
+  background-color: #313d61;
+}
+
+#address-input {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 2px solid #ccc;
+  outline: none;
+  transition: border-color 0.3s ease-in-out;
+  min-width: 200px;
+}
+
+#address-input:focus {
+  border-color: #007bff;
+}
+
+/*sondage ------------------------------------------------------*/
+#sondage {
+  border-collapse: collapse;
+  border-color: white;
+  width: 100%;
+}
+
+#td {
+  padding: 20px;
+  text-align: left;
+  border: 1px solid #3a3838;
+}
+
+#tb1,
+#tb2,
+#tb3,
+#tb4,
+#p1,
+#p2,
+#p3,
+#p4 {
+  width: 50px;
+  text-align: right;
+
+}
+
+#perstotal {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.container-admin {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.centered-element{
+  position: absolute;
+  top: 40%;
+}

@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin - Feecare{% endblock %}
+
+{% block body %}
+
+<style>
+</style>
+
+<div class="container-admin">
+    <a class="btn btn-outline-secondary" href="/users/logout">Deconnexion</a>
+    <div class="centered-element">
+        <a href="/traiter/add" class="btn btn-primary">Ajouter une famille à un traitant</a>
+        <a href="/traiter/remove" class="btn btn-primary">Retirer une famille à un traitant</a>
+        <a href="/identifiant" class="btn btn-primary">Créer un ID</a>
+        <a href="/list-centre" class="btn btn-primary">Editer les centres</a>
+    </div>
+</div>
+
+
+{% endblock %}

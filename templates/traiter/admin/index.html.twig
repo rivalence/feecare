@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Feecare - Traiter{% endblock %}
+
+{% block body %}
+
+<div class="container-fluid bg-body-secondary mt-4">
+    <div class="container-admin">
+        <a href="/actualite" class="btn btn-outline-secondary">Retour à l'Accueil</a>
+        <div class="container col-3 rounded mt-4 mb-4 bg-light centered-element">
+            {% for messages in app.flashes(['save_success', 'patient_removed']) %}
+                {% for message in messages %}
+                    <div class="alert alert-success text-center">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+
+            {% for messages in app.flashes(['user_introuvable', 'patient_exist']) %}
+                {% for message in messages %}
+                    <div class="alert alert-danger text-center">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+                
+            {% endfor %}
+
+            {{ form(form) }}
+        </div>
+
+    </div>
+    
+</div>
+{% endblock %}

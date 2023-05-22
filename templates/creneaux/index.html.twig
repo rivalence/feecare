@@ -1,0 +1,67 @@
+{% extends 'baseEducateur.html.twig' %}
+
+{% block title %}Feecare - Disponibilité{% endblock %}
+
+{% block body %}
+    <div class="container-fluid bg-body-secondary">
+        {% for messages in app.flashes(['creneau_removed', 'creneau_ajoute']) %}
+            {% for message in messages %}
+                <div class="alert alert-success text-center">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endfor %} 
+
+        {% for message in app.flashes('creneau_exist') %}
+            <div class="alert alert-danger text-center">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        <div class="row">
+            <div class="container bg-light pt-4 pb-4 col-4 rounded">
+                {{ form(form) }}
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="container mt-4 col-4">
+                {% if list_creneaux %}
+                    <h1 class="display-1 text-center">Mes disponibilités</h1>
+                    <table class="table border">
+                        <thead>
+                        <tr>
+                            <th scope="col">Date</th>
+                            <th scope="col">Heure</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            {% set i = 0 %}
+                            {% for creneau in list_creneaux %}
+                                <tr>
+                                    <td>{{ creneau.dateCreneau|date('d/m/Y') }}</td>
+                                    <td>{{ creneau.timeCreneau|date('H:i') }}</td>
+                                    <td> {{ form_start(tab_form_view[i]) }} 
+                                            {{ form_row(tab_form_view[i].id, {'attr' : { 'value' : creneau.idCreneau }}) }}
+                                            {{ form_row(tab_form_view[i].submit) }}
+                                        {{ form_end(tab_form_view[i]) }}
+                                    </td>
+                                </tr>
+
+                                {% set i = i + 1 %}
+                            {% endfor %}
+                        
+                        </tbody>
+                    </table>
+
+                {% else %}
+                    <h1 class="display-1 text-center">Vous n'avez aucune Disponibilité. Veuillez les mettre à jour si besoin.</h1>
+                {% endif %}
+                
+                
+            </div>
+        </div>
+        
+    </div>
+{% endblock %}
+

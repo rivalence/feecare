@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Feecare - Login{% endblock %}
+
+{% block header %}
+<div class="container-fluid bg-secondary">
+  <div class="row">
+    <div class="col-1">
+      <p><a href="/">Bonjour</a></p>
+    </div>
+    <div class="col text-center">
+      <p class="fs-1">Découvrez comment offrir un bel avenir à chacun.</p>
+    </div>
+  </div><hr class="text-light"> 
+{% endblock %}
+
+{% block body %}
+<div class="container bg-light rounded-3 p-3">
+  <p class="text-center fs-1">Connectez-vous</p><hr>
+
+  {% if error %}
+  <div class="alert alert-danger text-center">
+    {{ error.messageKey|trans(error.messageData, 'security') }}
+  </div>
+    
+  {% endif %}
+  
+  <form action="{{ path('app_login')}}" method="post">
+    <div class="mb-3">
+      <label for="username" class="form-label">Email </label>
+      <input type="email" class="form-control" id="username" name="_username" value="{{ last_username }}" aria-describedby="emailHelp" placeholder="exemple@feecare.com">
+      <small id="emailHelp" class="form-text text-muted">Vous ne devez partager vos identifiants avec personne.</small>
+    </div>
+    <div class="mb-3">
+      <label for="password" class="form-label">Mot de passe</label>
+      <input type="password" class="form-control" id="password" name="_password" placeholder="********">
+    </div>
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+    <button type="submit" class="btn btn-outline-primary mt-4">Se connecter</button>
+  </form>
+</div>
+  
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Feecare - Feed
+{% endblock %}
+
+{% block header %}
+	<div class="container z-1">
+		<nav class="nav nav-pills nav-fill">
+			<a class="nav-link border bs-primary" aria-current="page" href="/actualite">Accueil</a>
+			<a class="nav-link border" href="/rdv">Rendez-vous</a>
+			<a class="nav-link border" href="/traiter">Mes educateurs</a>
+			<a class="nav-link border" href="/messagerie">Messagerie</a>
+			<a class="nav-link border" href="/map">Nos centres</a>
+			<a class="nav-link border" href="/users/logout">Deconnexion</a>
+		</nav>
+	</div>
+{% endblock %}
+
+{% block body %}
+	<div class="bg-body-secondary pt-2 pb-2" id="post-container">
+		{% include "components/_feed.html.twig" with {
+			feeds : feeds,
+			liked_posts : liked_posts
+		} only %}
+	</div>
+{% endblock %}

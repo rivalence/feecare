@@ -1,0 +1,18 @@
+{% extends 'baseEducateur.html.twig' %}
+
+{% block title %}Post - Feecare{% endblock %}
+
+{% block body %}
+
+<div class="container-fluid bg-body-secondary pb-4 pt-4">
+    <div class="container bg-white pb-2" style="width: 40%;">
+        {% for message in app.flashes('save_post_failed') %}
+            <div class="alert alert-danger text-center">
+                {{ message }}
+            </div>
+        {% endfor %}
+        
+        {{ form(form) }}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="App\Entity\Creneaux" table="creneaux">
+    <indexes>
+      <index name="IDX_77F13C6D6971227" columns="educateur_key"/>
+    </indexes>
+    <id name="idCreneau" type="integer" column="id_creneau">
+      <generator strategy="SEQUENCE"/>
+      <sequence-generator sequence-name="creneaux_id_creneau_seq" allocation-size="1" initial-value="1"/>
+    </id>
+    <field name="dateCreneau" type="date" column="date_creneau" nullable="true"/>
+    <field name="timeCreneau" type="time" column="time_creneau" nullable="true"/>
+    <many-to-one field="educateurKey" target-entity="Users" fetch="LAZY">
+      <join-columns>
+        <join-column name="educateur_key" referenced-column-name="id_user"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

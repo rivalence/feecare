@@ -1,0 +1,42 @@
+{% extends 'baseEducateur.html.twig' %}
+
+{% block title %}Feecare - Messagerie
+{% endblock %}
+
+{% block body %}
+	<div class="wrapper">
+		<section class="users">
+
+			<header>
+				<div class="content">
+					<h1>Messagerie - Mes familles</h1>
+				</div>
+			</header>
+			<div class="input-group">
+				<p>Rechercher une famille...</p>
+				<input type="text" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon"/>
+				<span class="input-group-text border-0" id="search-addon">
+					<button type="button" class="btn btn-primary btn-sm">Ok</button>
+				</span>
+			</div>
+			<div class="users-list">
+				{% set i = 0 %}
+				{% for patient in list_patient %}
+					<a href="{{ path('conversation', {'userId': patient.idUser}) }}">
+						<div class="content">
+							<div class="details">
+								<span>{{ patient.nom|upper }}
+									{{ patient.prenom|upper }}
+
+								</span>
+								<p>last Mess</p>
+							</div>
+						</div>
+					</a>
+					{% set i = i + 1 %}
+				{% endfor %}
+
+			</div>
+		</section>
+	</div>
+{% endblock %}

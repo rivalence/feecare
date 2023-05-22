@@ -1,0 +1,18 @@
+{% extends 'baseEducateur.html.twig' %}
+
+{% block title %}Feecare - Feed{% endblock %}
+
+{% block body %}
+<div class="bg-body-secondary pt-2 pb-2" id="post-container">
+    <div class="container mb-2">
+        <a class="btn btn-outline-primary" href="/post">Créer un post</a>
+    </div>
+    
+{% include "components/_feed.html.twig" with {
+    feeds : feeds,
+    liked_posts : liked_posts
+} only %}
+</div>
+
+
+{% endblock %}
