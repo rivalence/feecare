@@ -16,8 +16,16 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class CreneauxController extends AbstractController
 {
+    public function __construct(
+        private CreneauxRepository $repository, 
+        private ManagerRegistry $doctrine
+    )
+    {
+        
+    }
+    
     #[Route('/creneaux', name: 'app_creneaux', methods: ['post', 'get'])]
-    public function index(Request $request, CreneauxRepository $repository, ManagerRegistry $doctrine): Response
+    public function index(Request $request): Response
     {
         //Etre sûr que l'utilisateur est connecté
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
@@ -32,8 +40,8 @@ class CreneauxController extends AbstractController
         $form->handleRequest($request);
 
         //Récupération des dispos déjà présentes pour l'éducateur
-        $educateurKey = $repository->getCurrentUserId($user)[0]["idUser"];
-        $list_creneaux = $repository->fetchCreneaux($educateurKey);
+        $educateurKey = $this->repository->getCurrentUserId($user)[0]["idUser"];
+        $list_creneaux = $this->repository->fetchCreneaux($educateurKey);
 
         if($form->isSubmitted() && $form->isValid()){
             $creneau = $form->getData();  
@@ -49,7 +57,7 @@ class CreneauxController extends AbstractController
             }
 
             //Sauvegarde du formulaire dans la table créneaux avec vérif des erreurs
-            $check = $repository->saveCreneau($creneau, $doctrine);
+            $check = $this->repository->saveCreneau($creneau, $this->doctrine);
             if (strcmp($check, 'ok') == 0){     //Si la sauvegarde est passée
                 $this->addFlash('creneau_ajoute', 'Disponibilités mises à jour !'); //Message d'alerte
                 return $this->redirectToRoute('app_creneaux');
@@ -84,8 +92,8 @@ class CreneauxController extends AbstractController
 
         if ($tabForm && $tabForm[0]->isSubmitted()){
             $idCreneauToRemove = $tabForm[0]->getData();
-            $creneauToRemove = $repository->getCreneauToRemove($idCreneauToRemove['id']);
-            $check = $repository->removeCreneau($creneauToRemove[0], $doctrine);
+            $creneauToRemove = $this->repository->getCreneauToRemove($idCreneauToRemove['id']);
+            $check = $this->repository->removeCreneau($creneauToRemove[0], $this->doctrine);
             if (strcmp($check, 'ok') == 0){
                 $this->addFlash('creneau_removed', 'Créneau supprimé avec succès');
                 return $this->redirectToRoute('app_creneaux');

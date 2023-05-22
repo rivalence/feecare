@@ -14,11 +14,18 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class HomeController extends AbstractController
 {
+    public function __construct(
+        private IdentifiantRepository $repository, 
+        private ValidatorInterface $validator, 
+        private AuthorizationCheckerInterface $authorizationCheckerInterface)
+    {
+        
+    }
     #[Route('/', 'home.index', methods: ['POST', 'GET'])]
-    public function index(Request $request, IdentifiantRepository $repository, ValidatorInterface $validator, AuthorizationCheckerInterface $authorizationCheckerInterface) : Response
+    public function index(Request $request) : Response
     {
         //Contrôle d'authentification
-        if($authorizationCheckerInterface->isGranted('IS_AUTHENTICATED_FULLY'))
+        if($this->authorizationCheckerInterface->isGranted('IS_AUTHENTICATED_FULLY'))
         {
             return $this->redirectToRoute('app_actualite');
         }
@@ -34,7 +41,7 @@ class HomeController extends AbstractController
             //On récupère les données du formulaire       
             $identifiant = $form->getData();
 
-            $errors = $validator->validate($identifiant);
+            $errors = $this->validator->validate($identifiant);
             //Si une erreur a été trouvé dans le formulaire
             if (count($errors) > 0) {
                 $errorsString = (string) $errors;
@@ -45,9 +52,10 @@ class HomeController extends AbstractController
             }
 
             //Si l'ID existe en BDD, on passe à la connexion ou l'inscription
-            if ($repository->findId($identifiant->getLibelle())){
+            if ($this->repository->findId($identifiant->getLibelle())){
                 //Sauvegarder le pseudo du user dans la table Users
-                $user_exist = $repository->findIdInUser($identifiant->getLibelle());
+                $user_exist = $this->repository->findIdInUser($identifiant->getLibelle());
+
                 if (!$user_exist){  //Si l'identifiant n'est rataché à aucun utilisateur
                     return $this->redirectToRoute('app_register');
                 }

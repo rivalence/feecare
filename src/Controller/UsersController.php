@@ -17,8 +17,18 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class UsersController extends AbstractController
 {
+    public function __construct(
+    private ValidatorInterface $validator, 
+    private RegisterRepository $repository, 
+    private ManagerRegistry $doctrine, 
+    private IdentifiantRepository $id_repository, 
+    private UserPasswordHasherInterface $passwordHasher,
+    private AuthenticationUtils $authenticationUtils)
+    {
+        
+    }
     #[Route('/users/register', name: 'app_register', methods: ['POST', 'get'])]
-    public function index(Request $request, ValidatorInterface $validator, RegisterRepository $repository, ManagerRegistry $doctrine, IdentifiantRepository $id_repository, UserPasswordHasherInterface $passwordHasher): Response
+    public function register(Request $request): Response
     {   
         $user = new Users();
 
@@ -28,7 +38,7 @@ class UsersController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()){
             $user = $form->getData();
             $plaintextPassword = $user->getPassword();
-            $errors = $validator->validate($user);
+            $errors = $this->validator->validate($user);
             //Si une erreur a été trouvé dans le formulaire
             if (count($errors) > 0) {
                 $errorsString = (string) $errors;
@@ -39,14 +49,14 @@ class UsersController extends AbstractController
             }
 
             //On récupère l'identifiant entré par l'utilisateur dans le formulaire d'inscription s'il existe en table Identifiant
-            $id_for_identifiant = $id_repository->findId($user->getUtilisateur()); 
+            $id_for_identifiant = $this->id_repository->findId($user->getUtilisateur()); 
             
             if ($id_for_identifiant && strcmp($user->getUtilisateur(), $id_for_identifiant[0]['libelle']) == 0){    //si l'utilisateur a ré-entré le bon pseudo
                 //Test de si un utilisateur possède déjà l'ID renseigné
-                $user_exist = $repository->findUserByPseudo($user->getUtilisateur());
+                $user_exist = $this->repository->findUserByPseudo($user->getUtilisateur());
                 if(!$user_exist){
                     //Hashage du mot de passe et écriture des données du formualaire en BDD
-                    $hashedPassword = $passwordHasher->hashPassword($user, $plaintextPassword);
+                    $hashedPassword = $this->passwordHasher->hashPassword($user, $plaintextPassword);
                     $user->setMdp($hashedPassword);
 
                     //Nom et prenom transformés en majuscules
@@ -57,7 +67,7 @@ class UsersController extends AbstractController
                     $user->setNom($nom);
                     $user->setPrenom($prenom);
 
-                    $check = $repository->save($user, $doctrine);
+                    $check = $this->repository->save($user, $this->doctrine);
                     if($check == 1){    //Si l'écriture est bonne, on renvoie vers la connexion
                         return $this->redirectToRoute('app_login');
                     }
@@ -95,14 +105,14 @@ class UsersController extends AbstractController
     }
 
     
-    #[Route('/users/login', name: 'app_login', methods: ['POST', 'get'])]
-    public function new(AuthenticationUtils $authenticationUtils): Response
+    #[Route('/users/login', name: 'app_login', methods: ['POST', 'GET'])]
+    public function login(): Response
     {
         //Erreurs de connexion
-        $error = $authenticationUtils->getLastAuthenticationError();
+        $error = $this->authenticationUtils->getLastAuthenticationError();
 
         //Dernier login entré par l'utilisateur
-        $lastUserName = $authenticationUtils->getLastUsername();
+        $lastUserName = $this->authenticationUtils->getLastUsername();
 
         return $this->render('users/login/index.html.twig', [
             'error' => $error, 

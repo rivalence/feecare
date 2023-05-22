@@ -55,7 +55,7 @@ class CreneauxType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Creneaux::class,
+            'data_class' => CreneauxData::class,
         ]);
     }
 }

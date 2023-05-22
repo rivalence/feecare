@@ -5,23 +5,31 @@ namespace App\Controller;
 use App\Entity\Rdv;
 use App\Entity\Users;
 use App\Entity\Creneaux;
+use App\Form\ChoixCreneauType;
+use App\Model\ChoixCreneauData;
 use Symfony\Component\Mime\Email;
 use App\Repository\PriseRdvRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Mailer\MailerInterface;
 
 class PriseRdvController extends AbstractController
 {
+    public function __construct(
+        private PriseRdvRepository $repository, 
+        private ManagerRegistry $doctrine, 
+        private MailerInterface $mailer)
+    {
+        
+    }
     #[Route('/prise/rdv', name: 'app_prise_rdv')]
-    public function index(PriseRdvRepository $repository, SessionInterface $session, Request $request, 
-    ManagerRegistry $doctrine, MailerInterface $mailer): Response
+    public function index(
+        Request $request,
+        SessionInterface $session): Response
     {
         //Etre sûr que l'utilisateur est connecté
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
@@ -29,32 +37,23 @@ class PriseRdvController extends AbstractController
         $user = new Users();
         //Utilisateur connecté
         $user = $this->getUser();
-        $user = $repository->getCurrentUser($user->getUserIdentifier());
+        $user = $this->repository->getCurrentUser($user->getUserIdentifier());
 
         //Instance pour les créneaux du traitant
         $creneaux = new Creneaux();
 
         //Recupération de l'ID du traitant 
         $nom = $session->get('name')["nom"];
-        $idTraitant = $repository->findIdUser($nom);
-        $creneaux = $repository->getCreneaux($idTraitant[0]['idUser']);
-        
+        $idTraitant = $this->repository->findIdUser($nom);
+        $creneaux = $this->repository->getCreneaux($idTraitant[0]['idUser']);
 
         //Tableau de Formulaires pour récupérer les créneaux de l'éducateur
         $i = 0;
         $tabForm = [];
         $tabFormView = [];
+        $choix_creneau = new ChoixCreneauData();
         while ($i < count($creneaux)) {
-            $form = $this->createFormBuilder()
-            ->add('id', HiddenType::class)
-            ->add('submit', SubmitType::class, [
-                'attr' => [
-                    'class' => 'btn btn-outline-primary',
-                ],
-                'label' => 'Choisir ce créneau'
-            ])
-            ->setMethod('post')
-            ->getForm();
+            $form = $this->createForm(ChoixCreneauType::class, $choix_creneau);
             
             //Attente de données
             $form->handleRequest($request);
@@ -70,11 +69,11 @@ class PriseRdvController extends AbstractController
                 //Récupération des données du créneau
                 $idCreneau = $form->getData();
                 $creneauChoisi = new Creneaux();
-                $creneauChoisi = $repository->getCreneauChoisi($idCreneau["id"]);
+                $creneauChoisi = $this->repository->getCreneauChoisi($idCreneau["id"]);
 
                 //On récupère toutes les données du traitant
                 $traitant = new Users();
-                $traitant= $repository->getTraitant($idTraitant[0]['idUser']);
+                $traitant= $this->repository->getTraitant($idTraitant[0]['idUser']);
 
                 //Sauvegarde du rdv en BDD
                 $rdv = new Rdv();
@@ -84,7 +83,7 @@ class PriseRdvController extends AbstractController
                 $rdv->setFamilleKey($user[0]);
 
                 //Contrôle d'erreurs
-                $check = $repository->saveRdv($rdv, $doctrine);
+                $check = $this->repository->saveRdv($rdv, $this->doctrine);
                 if (strcmp($check, 'ok') == 0){
                     $session->remove('name');
                     $this->addFlash('rdv_success', 'Rendez-vous ajouté avec succès !');
@@ -98,7 +97,7 @@ class PriseRdvController extends AbstractController
                     // $mailer->send($email);
 
                     //On supprime le créneau réservé pour le rendez-vous
-                    $repository->removeCreneau($creneauChoisi[0], $doctrine);
+                    $this->repository->removeCreneau($creneauChoisi[0], $this->doctrine);
 
                     return $this->redirectToRoute('app_traiter');
                 } else {
@@ -113,8 +112,7 @@ class PriseRdvController extends AbstractController
 
         return $this->render('prise_rdv/index.html.twig', [
             'tab_form' => $tabFormView,
-            'creneaux' => $creneaux
-            
+            'creneaux' => $creneaux  
         ]);
     }
 }

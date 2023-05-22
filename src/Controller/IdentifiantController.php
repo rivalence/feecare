@@ -13,8 +13,15 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class IdentifiantController extends AbstractController
 {
+    public function __construct(
+        private IdentifiantRepository $identifiantRepository, 
+        private ManagerRegistry $doctrine)
+    {
+        
+    }
+    
     #[Route('/identifiant', name: 'app_identifiant')]
-    public function index(Request $request, IdentifiantRepository $identifiantRepository, ManagerRegistry $doctrine): Response
+    public function index(Request $request): Response
     {
         //Etre sûr que l'utilisateur est connecté
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
@@ -25,12 +32,12 @@ class IdentifiantController extends AbstractController
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()){
-            if($identifiantRepository->findId($identifiant->getLibelle())){
+            if($this->identifiantRepository->findId($identifiant->getLibelle())){
                 $this->addFlash("id_exist", "Cet identifiant existe déjà");
                 return $this->redirectToRoute('app_identifiant');
             }
             else {
-                $identifiantRepository->addIdentifiant($identifiant, $doctrine);
+                $this->identifiantRepository->addIdentifiant($identifiant, $this->doctrine);
                 $this->addFlash("id_success", "Identifié rajouté avec succès");
             }
         }

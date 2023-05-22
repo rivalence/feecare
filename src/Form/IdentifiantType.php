@@ -16,7 +16,7 @@ class IdentifiantType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('Libelle', TextType::class, [
+            ->add('libelle', TextType::class, [
                 'attr' => [
                     'class' => 'form-control mb-3',
                     'id' => "inputId"
@@ -45,7 +45,7 @@ class IdentifiantType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Identifiant::class,
+            'data_class' => IdentifiantData::class,
         ]);
     }
 }

@@ -18,8 +18,16 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class TraiterController extends AbstractController
 {
+
+    public function __construct(
+        private  TraiterRepository $repository,
+        private ManagerRegistry $doctrine,
+    )
+    {
+        
+    }
     #[Route('/traiter', name: 'app_traiter')]
-    public function index(Request $request, TraiterRepository $repository, ManagerRegistry $doctrine, SessionInterface $session) : Response
+    public function index(Request $request, SessionInterface $session) : Response
     {
         //Etre sûr que l'utilisateur est connecté
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
@@ -59,7 +67,7 @@ class TraiterController extends AbstractController
                 //recup le nom dans rdv, afficher les créneaux dispos et valider un
             }
             //Liste des traitants pour le user courant
-            $listTraitants = $repository->fetchAllTraitant($repository->getCurrentUserId($user)[0]["idUser"]);
+            $listTraitants = $this->repository->fetchAllTraitant($this->repository->getCurrentUserId($user)[0]["idUser"]);
             return $this->render('traiter/famille/index.html.twig', [
                 'form' => $form->createView(),
                 'list_traitant' => $listTraitants
@@ -72,7 +80,7 @@ class TraiterController extends AbstractController
     }
 
     #[Route('/traiter/add', name: 'app_traiter_add')]
-    public function addPatient(Request $request, TraiterRepository $repository, ManagerRegistry $doctrine) : Response
+    public function addPatient(Request $request) : Response
     {
         //Etre sûr que l'utilisateur est connecté
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
@@ -91,14 +99,14 @@ class TraiterController extends AbstractController
             $nom_educateur = strtoupper($traiterData->educateur);
 
             //Récupération des infos de l'utilisateur famille
-            $user_famille = $repository->findUserByName($nom_patient);
+            $user_famille = $this->repository->findUserByName($nom_patient);
 
             //Infos de l'educateur
-            $user_educateur = $repository->findUserByName($nom_educateur);
+            $user_educateur = $this->repository->findUserByName($nom_educateur);
             
             if($user_famille && $user_educateur){  //S'il existe
                 //Liste des patients pris en charge par l'educateur
-                $list_patient = $repository->fetchAllPatient($user_educateur[0]->getIdUser());
+                $list_patient = $this->repository->fetchAllPatient($user_educateur[0]->getIdUser());
                 
                 foreach($list_patient as $patient){ //On vérifie si le user ne fait déjà partie de la liste des patients
                     if ($patient == $user_famille[0]){
@@ -109,7 +117,7 @@ class TraiterController extends AbstractController
 
                 $traiter->setEducateurKey($user_educateur[0]);
                 $traiter->setFamilleKey($user_famille[0]);
-                $check = $repository->addPatient($traiter, $doctrine);
+                $check = $this->repository->addPatient($traiter, $this->doctrine);
                 if (strcmp($check, 'ok') == 0){
                     $this->addFlash('save_success', 'Patient ajouté avec succès!');
                     return $this->redirectToRoute('app_traiter_add');
@@ -130,7 +138,7 @@ class TraiterController extends AbstractController
     }
 
     #[Route('/traiter/remove', name: 'app_traiter_remove')]
-    public function removePatient(Request $request, TraiterRepository $repository, ManagerRegistry $doctrine) : Response
+    public function removePatient(Request $request) : Response
     {
         //Etre sûr que l'utilisateur est connecté
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
@@ -149,21 +157,21 @@ class TraiterController extends AbstractController
             $nom_educateur = strtoupper($traiterData->educateur);
 
             //Récupération des infos de l'utilisateur famille
-            $user_famille = $repository->findUserByName($nom_patient);
+            $user_famille = $this->repository->findUserByName($nom_patient);
 
             //Infos de l'educateur
-            $user_educateur = $repository->findUserByName($nom_educateur);
+            $user_educateur = $this->repository->findUserByName($nom_educateur);
 
             if($user_famille && $user_educateur){  //S'il existe
                 //Liste des patients pris en charge par l'educateur
-                $list_patient = $repository->fetchAllPatient($user_educateur[0]->getIdUser());
+                $list_patient = $this->repository->fetchAllPatient($user_educateur[0]->getIdUser());
 
                 foreach($list_patient as $patient){ //On vérifie si le user ne fait déjà partie de la liste des patients
                     if ($patient == $user_famille[0]){
                         $traiter = new Traiter();
                         $traiter->setEducateurKey($user_educateur[0]);
                         $traiter->setFamilleKey($user_famille[0]);
-                        $check = $repository->removePatient($traiter, $doctrine);
+                        $check = $this->repository->removePatient($traiter, $this->doctrine);
                         $this->addFlash('save_success', 'Patient supprimé avec succès!');
                         return $this->redirectToRoute('app_traiter_remove');
                     }

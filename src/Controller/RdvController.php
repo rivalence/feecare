@@ -17,8 +17,17 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class RdvController extends AbstractController
 {
+    public function __construct(
+        private RdvRepository $repository, 
+        private  ManagerRegistry $doctrine,
+        private  MailerInterface $mailer
+    )
+    {
+        
+    }
+
     #[Route('/rdv', name: 'app_rdv')]
-    public function index(RdvRepository $repository, Request $request, ManagerRegistry $doctrine, MailerInterface $mailer): Response
+    public function index(Request $request): Response
     {
         //Etre sûr que l'utilisateur est connecté
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
@@ -27,13 +36,13 @@ class RdvController extends AbstractController
         $user = new Users();
         $user = $this->getUser();
         //Récupératon des rdv du user actif
-        $user = $repository->getCurrentUser($user->getUserIdentifier());
+        $user = $this->repository->getCurrentUser($user->getUserIdentifier());
 
         //Contrôle du type de user et interface à renvoyer
         $pseudo = $user[0]->getUtilisateur();
         if(strcmp($pseudo[0], 'F') == 0)    //interface famille
         {    
-            $rdvListFetch = $repository->getRdvsFamille($user[0]->getIdUser());
+            $rdvListFetch = $this->repository->getRdvsFamille($user[0]->getIdUser());
             $rdvList = [];
 
             foreach ($rdvListFetch as $rdv) {
@@ -67,8 +76,8 @@ class RdvController extends AbstractController
             //Traitement après soumission de l'annulation du rdv
             if ($tabForm && $tabForm[0]->isSubmitted()){
                 $idRdvToRemove = $tabForm[0]->getData();
-                $rdvToRemove = $repository->getRdv($idRdvToRemove['id']);
-                $repository->removeRdv($rdvToRemove[0], $doctrine);
+                $rdvToRemove = $this->repository->getRdv($idRdvToRemove['id']);
+                $this->repository->removeRdv($rdvToRemove[0], $this->doctrine);
 
                 foreach ($rdvList as $rdv) {
                     if($rdv[0]->getIdRdv() == $idRdvToRemove){
@@ -80,7 +89,7 @@ class RdvController extends AbstractController
                         $user[0]->getPrenom().".")
                         ->html('<p>See Twig integration for better HTML integration!</p>');
 
-                        $mailer->send($email);
+                        $this->mailer->send($email);
                     }
                 }
                 
@@ -94,7 +103,7 @@ class RdvController extends AbstractController
             ]);
         }
         else if(strcmp($pseudo[0], 'E') == 0){
-            $rdvListFetch = $repository->getRdvsEducateur($user[0]->getIdUser());
+            $rdvListFetch = $this->repository->getRdvsEducateur($user[0]->getIdUser());
             $rdvList = [];
 
             foreach ($rdvListFetch as $rdv) {
@@ -122,8 +131,8 @@ class RdvController extends AbstractController
                 //Traitement après soumission de l'annulation du rdv
                 if ($form->isSubmitted() && $form->isValid()){
                     $idRdvToRemove = $form->getData();
-                    $rdvToRemove = $repository->getRdv($idRdvToRemove['id']);
-                    $repository->removeRdv($rdvToRemove[0], $doctrine);
+                    $rdvToRemove = $this->repository->getRdv($idRdvToRemove['id']);
+                    $this->repository->removeRdv($rdvToRemove[0], $this->doctrine);
 
                     foreach ($rdvList as $rdv) {
                         if($rdv[0]->getIdRdv() == $idRdvToRemove){
@@ -135,7 +144,7 @@ class RdvController extends AbstractController
                             $user[0]->getPrenom().".")
                             ->html('<p>See Twig integration for better HTML integration!</p>');
     
-                            $mailer->send($email);
+                            $this->mailer->send($email);
                         }
                     }
                     

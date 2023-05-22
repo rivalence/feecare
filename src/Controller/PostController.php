@@ -17,8 +17,16 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 
 class PostController extends AbstractController
 {
+    public function __construct(
+        private PostRepository $postRepository, 
+        private ManagerRegistry $doctrine, 
+        private SluggerInterface $slugger
+    )
+    {
+        
+    }
     #[Route('/post', name: 'app_post')]
-    public function index(Request $request, PostRepository $postRepository, ManagerRegistry $doctrine, SluggerInterface $slugger): Response
+    public function index(Request $request): Response
     {
         //Etre sûr que l'utilisateur est connecté
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
@@ -43,7 +51,7 @@ class PostController extends AbstractController
             $file = $form->get('dataPost')->getData();
             $originalFileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
             // this is needed to safely include the file name as part of the URL
-            $safeFilename = $slugger->slug($originalFileName);
+            $safeFilename = $this->slugger->slug($originalFileName);
             $newFilename = $safeFilename.'-'.uniqid().'.'.$file->guessExtension();
 
             // Move the file to the directory where brochures are stored
@@ -60,7 +68,7 @@ class PostController extends AbstractController
             $post->setDataPost($newFilename);
 
             //Enregistrement du post
-            $check = $postRepository->savePost($post, $doctrine);
+            $check = $this->postRepository->savePost($post, $this->doctrine);
 
             //Contrôle d'erreurs sur la sauvegarde du post
             if(strcmp($check, 'ok') == 0){
