@@ -12,14 +12,10 @@ import Comment from './scripts/comment';
 import ModalComment from './scripts/modal-comment';
 import ModalLike from './scripts/modal-like';
 import ShowPosts from './scripts/showPosts';
-import './scripts/chat.js';
-import './scripts/map.js';
-import './scripts/listcentreAdresse.js';
-import './scripts/sondage.js';
+import ShowRecurrenceCreneau from './scripts/showRecurenceCreneau';
 
 import 'bootstrap';
 import ShowImg from './scripts/showImg';
-
 document.addEventListener('DOMContentLoaded', () => {
     const likeElements = [].slice.call(document.querySelectorAll('a[data-action="like"]'));
     const commentElements = [].slice.call(document.querySelectorAll('form[data-action="comment"]'));
@@ -27,28 +23,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const showLikes = [].slice.call(document.querySelectorAll("#show-likes"));
     const showPosts = [].slice.call(document.querySelectorAll('div[data-hidden="true"]'));
     const images = [].slice.call(document.querySelectorAll('#show-img'));
+    const type_creneau = document.querySelector("#creneaux_type");
 
-    if (likeElements) {
-        new Like(likeElements);
-    }
+    if (likeElements) new Like(likeElements);
 
-    if (commentElements) {
-        new Comment(commentElements);
-    }
+    if (commentElements) new Comment(commentElements);
 
-    if (btnComment) {
-        new ModalComment(btnComment);
-    }
+    if (btnComment) new ModalComment(btnComment);
 
-    if (showLikes) {
-        new ModalLike(showLikes);
-    }
+    if (showLikes) new ModalLike(showLikes);
 
-    if (showPosts) {
-        new ShowPosts(showPosts);
-    }
+    if (showPosts) new ShowPosts(showPosts);
 
-    if (images) {
-        new ShowImg(images)
-    }
+    if (images) new ShowImg(images)
+
+    if(type_creneau) new ShowRecurrenceCreneau(type_creneau);
 });

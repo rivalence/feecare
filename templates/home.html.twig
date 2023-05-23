@@ -8,9 +8,7 @@
 		<div class="row">
 			<div class="col-1">
 				<p>
-					<a href="/">Bonjour</a>
-
-
+					<a href="/">HOME</a>
 				</p>
 			</div>
 			<div class="col text-center">
@@ -18,6 +16,33 @@
 			</div>
 		</div><hr class="text-light">
 
-{% endblock %}
+		<div class="row">
+			<div class="col container p-3">
+				<p class="fs-2 text-light">L'action social, une réponse à chacun.</p>
+				<p class="text-light">L’action sociale désigne l'ensemble des moyens par lesquels une société agit sur elle-même pour 
+					préserver sa cohésion, notamment par des dispositifs législatifs ou réglementaires et par des actions visant à aider les 
+					personnes ou les groupes																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																		            les plus fragiles à mieux vivre, à acquérir ou à préserver leur autonomie et à s’adapter au milieu social environnant.</p>
+			</div>
+			<div class="col container rounded-3 m-3 p-2 bg-light">
+				<p class="text-center fs-5">Avez-vous un identifiant ? Saisissez le
+				</p>
+				<hr>
+				<div class="mb-3">
+					{% for message in app.flashes('notice') %}
+						<div class="alert alert-danger text-center">
+							{{ message }}
+						</div>
+					{% endfor %}
+					<div class="list-group-item list-group-item-danger">
+						{{error}}
+					</div>
+
+					{{form(form)}}
+				</div>
+			</div>
+		</div><hr class="text-light">
+	</div>
+
+	{% endblock %}
 
 	

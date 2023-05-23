@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Creneaux;
 use App\Entity\Users;
 use App\Form\CreneauxType;
+use App\Model\CreneauxData;
 use App\Repository\CreneauxRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -35,8 +36,8 @@ class CreneauxController extends AbstractController
         $user = $this->getUser();
 
         //Création du formulaire de dispos
-        $creneau = new Creneaux();
-        $form = $this->createForm(CreneauxType::class, $creneau);
+        $creneauData = new CreneauxData();
+        $form = $this->createForm(CreneauxType::class, $creneauData);
         $form->handleRequest($request);
 
         //Récupération des dispos déjà présentes pour l'éducateur
@@ -44,27 +45,42 @@ class CreneauxController extends AbstractController
         $list_creneaux = $this->repository->fetchCreneaux($educateurKey);
 
         if($form->isSubmitted() && $form->isValid()){
-            $creneau = $form->getData();  
-
-            //On récupère l'ID du user courant et màj date et heure
+            //Création de l'entité créneau à sauver
+            $creneau = new Creneaux();
             $creneau->setEducateurKey($user);
+            $creneau->setTimeCreneau($creneauData->timeCreneau);
+            //Type d'entrée de créneaux voulu
+            if(!strcmp($creneauData->type, 'Semaine')){
+                for ($i=0; $i < $creneauData->recurrence; $i++) { 
+                    $creneau->setDateCreneau($creneauData->dateCreneau);
+                    $result = $this->saveCreneau($creneau, $list_creneaux);
+                    if(strcmp($result, 'no')) {
+                        $this->addFlash('creneau_save_fail', 'Erreur de sauvegarde... Veuillez rééssayer');
+                        $this->redirectToRoute('app_creneaux');
+                    } 
 
-            foreach($list_creneaux as $c){        //On vérifie si le même créneau a déjà été ajouté
-                if (($c->getDateCreneau() == $creneau->getDateCreneau()) && ($c->getTimeCreneau() == $creneau->getTimeCreneau())){
-                    $this->addFlash('creneau_exist', 'Ce créneau existe déjà dans votre liste.');
-                    return $this->redirectToRoute('app_creneaux');
+                    $creneau->setDateCreneau($creneau->getDateCreneau()->modify("+1 weeks"));
                 }
-            }
 
-            //Sauvegarde du formulaire dans la table créneaux avec vérif des erreurs
-            $check = $this->repository->saveCreneau($creneau, $this->doctrine);
-            if (strcmp($check, 'ok') == 0){     //Si la sauvegarde est passée
                 $this->addFlash('creneau_ajoute', 'Disponibilités mises à jour !'); //Message d'alerte
-                return $this->redirectToRoute('app_creneaux');
+                $this->redirectToRoute('app_creneaux');
             }
-            else{
-                //Retourner le message dans un log
-                return $this->redirectToRoute('app_creneaux');
+            else {
+                //Création de l'entité créneau à sauver
+                $creneau = new Creneaux();
+                $creneau->setEducateurKey($user);
+                $creneau->setDateCreneau($creneauData->dateCreneau);
+                $creneau->setTimeCreneau($creneauData->timeCreneau);
+                $result = $this->saveCreneau($creneau, $list_creneaux);
+
+                //Rediriger direct sur la page creneau si erreur
+                if(strcmp($result, 'no')) {
+                    $this->addFlash('creneau_save_fail', 'Erreur de sauvegarde... Veuillez rééssayer');
+                    $this->redirectToRoute('app_creneaux');
+                }
+
+                $this->addFlash('creneau_ajoute', 'Disponibilités mises à jour !'); //Message d'alerte
+                $this->redirectToRoute('app_creneaux');
             }
         }
 
@@ -108,5 +124,26 @@ class CreneauxController extends AbstractController
             'list_creneaux' => $list_creneaux,
             'tab_form_view' => $tabFormView
         ]);
+    }
+
+    public function saveCreneau(Creneaux $creneau, array $list_creneaux): string
+    {
+        foreach($list_creneaux as $c){        //On vérifie si le même créneau a déjà été ajouté
+            if (($c->getDateCreneau() == $creneau->getDateCreneau()) && ($c->getTimeCreneau() == $creneau->getTimeCreneau())){
+                $this->addFlash('creneau_exist', 'Le créneau du '.$creneau->getDateCreneau()->format('Y-m-d').' à '.
+                $creneau->getTimeCreneau()->format('H:i').' existe déjà dans votre liste.');
+                return 'no';
+            }
+        }
+
+        //Sauvegarde du formulaire dans la table créneaux avec vérif des erreurs
+        $check = $this->repository->saveCreneau($creneau, $this->doctrine);
+        if (strcmp($check, 'ok') == 0){     //Si la sauvegarde est passée
+            return 'yes';
+        }
+        else{
+            //Retourner le message dans un log
+            return 'no';
+        }
     }
 }

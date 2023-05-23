@@ -2,11 +2,9 @@
 
 namespace App\Form;
 
-use App\Entity\Creneaux;
+use App\Model\CreneauxData;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TimeType;
+use Symfony\Component\Form\Extension\Core\Type as Assert;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -15,12 +13,11 @@ class CreneauxType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('dateCreneau', DateType::class, [
+            ->add('dateCreneau', Assert\DateType::class, [
                 'widget' => 'single_text',
                 'input' => 'datetime', 
                 'attr' => [
                     'class' => 'form-control',
-                    'id' => 'dateCreneau'
                 ],
                 'label_attr' => [
                     'for' => 'dateCreneau',
@@ -28,7 +25,7 @@ class CreneauxType extends AbstractType
                 ],
                 'label' => 'Date'
             ])
-            ->add('timeCreneau', TimeType::class, [
+            ->add('timeCreneau', Assert\TimeType::class, [
                 'input'  => 'datetime',
                 'widget' => 'single_text',
                 'label' => 'Heure',
@@ -42,13 +39,36 @@ class CreneauxType extends AbstractType
                 ],
 
             ])
-            ->add('Submit', SubmitType::class, [
+            ->add('type', Assert\ChoiceType::class, [
+                'choices' => [
+                    'Journalier' => 'Jour',
+                    'Hebdomadaire' => 'Semaine'
+                ],
+                'empty_data' => 'Semaine',
+                'attr' => [
+                    'class' => 'form-select',
+                    'id' => 'type-dispo',
+                ],
+                'label' => 'Type de disponibilté'
+            ])
+            ->add('recurrence', Assert\ChoiceType::class, [
+                'choices' => [
+                    '2' => 2,
+                    '3' => 3,
+                    '4' => 4,
+                ],
+                'attr' => [
+                    'class' => 'form-select',
+                ],
+                'label' => 'Nombre de semaines'
+            ])
+            ->add('Submit', Assert\SubmitType::class, [
                 'attr' => [
                     'class' => 'btn btn-outline-primary mt-3',
                 ],
                 'label' => 'Ajouter une disponibilité'
             ])
-            ->setMethod('post')
+            ->setMethod('POST')
         ;
     }
 

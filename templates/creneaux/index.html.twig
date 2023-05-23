@@ -12,15 +12,24 @@
             {% endfor %}
         {% endfor %} 
 
-        {% for message in app.flashes('creneau_exist') %}
-            <div class="alert alert-danger text-center">
-                {{ message }}
-            </div>
+        {% for messages in app.flashes(['creneau_exist', 'creneau_save_fail']) %}
+            {% for message in messages %}
+                <div class="alert alert-danger text-center">
+                    {{ message }}
+                </div>
+            {% endfor %}  
         {% endfor %}
 
         <div class="row">
             <div class="container bg-light pt-4 pb-4 col-4 rounded">
-                {{ form(form) }}
+                {{ form_start(form) }}
+                    {{ form_row(form.dateCreneau) }}
+                    {{ form_row(form.timeCreneau) }}
+                    {{ form_row(form.type) }}
+                    <div id="rec_creneau" style="display: none;">
+                        {{ form_row(form.recurrence) }}
+                    </div>
+                {{ form_end(form) }}
             </div>
         </div>
         

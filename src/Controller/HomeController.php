@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Identifiant;
 use App\Form\IdentifiantType;
+use App\Model\IdentifiantData;
 use App\Repository\IdentifiantRepository;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -32,17 +33,15 @@ class HomeController extends AbstractController
 
         //formulaire de base renvoyer sur la page d'accueil
 
-        $identifiant = new Identifiant();
+        $identifiantData = new IdentifiantData();
 
-        $form = $this->createForm(IdentifiantType::class, $identifiant);
+        $form = $this->createForm(IdentifiantType::class, $identifiantData);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {  
-            //On récupère les données du formulaire       
-            $identifiant = $form->getData();
 
-            $errors = $this->validator->validate($identifiant);
-            //Si une erreur a été trouvé dans le formulaire
+            //Controle des erreurs de formulaire
+            $errors = $this->validator->validate($identifiantData);
             if (count($errors) > 0) {
                 $errorsString = (string) $errors;
                 return $this->render('home.html.twig', [
@@ -52,9 +51,9 @@ class HomeController extends AbstractController
             }
 
             //Si l'ID existe en BDD, on passe à la connexion ou l'inscription
-            if ($this->repository->findId($identifiant->getLibelle())){
+            if ($this->repository->findId($identifiantData->libelle)){
                 //Sauvegarder le pseudo du user dans la table Users
-                $user_exist = $this->repository->findIdInUser($identifiant->getLibelle());
+                $user_exist = $this->repository->findIdInUser($identifiantData->libelle);
 
                 if (!$user_exist){  //Si l'identifiant n'est rataché à aucun utilisateur
                     return $this->redirectToRoute('app_register');

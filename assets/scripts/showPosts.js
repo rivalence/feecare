@@ -2,7 +2,7 @@ export default class ShowPosts {
     constructor(postContainers){
         this.postContainers = postContainers;
 
-        if(this.postContainers){
+        if(this.postContainers.length > 0){
             this.init();
         }
     }

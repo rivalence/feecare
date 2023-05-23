@@ -46,24 +46,24 @@ class Creneaux
      */
     private $educateurKey;
 
-    public function getDateCreneau(): ?\DateTimeInterface
+    public function getDateCreneau(): ?\DateTime
     {
         return $this->dateCreneau;
     }
 
-    public function setDateCreneau(?\DateTimeInterface $dateCreneau): self
+    public function setDateCreneau(?\DateTime $dateCreneau): self
     {
         $this->dateCreneau = $dateCreneau;
 
         return $this;
     }
 
-    public function getTimeCreneau(): ?\DateTimeInterface
+    public function getTimeCreneau(): ?\DateTime
     {
         return $this->timeCreneau;
     }
 
-    public function setTimeCreneau(?\DateTimeInterface $timeCreneau): self
+    public function setTimeCreneau(?\DateTime $timeCreneau): self
     {
         $this->timeCreneau = $timeCreneau;
 

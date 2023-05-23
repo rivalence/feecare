@@ -4,11 +4,7 @@ namespace App\Form;
 
 use App\Entity\Users;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type as Assert;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
@@ -20,7 +16,7 @@ class RegisterType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('utilisateur', TextType::class, [
+            ->add('utilisateur', Assert\TextType::class, [
                 'attr' => [
                     'class' => 'form-control mb-3',
                     'id' => "inputId"
@@ -35,7 +31,7 @@ class RegisterType extends AbstractType
                 ],
                 'label' => 'Identifiant'
             ])
-            ->add('nom', TextType::class, [
+            ->add('nom', Assert\TextType::class, [
                 'label_attr' => [
                     'for' => 'inputLastName',
                     'class' => 'form-label'
@@ -48,7 +44,7 @@ class RegisterType extends AbstractType
                 'required' => true,
                 'constraints' => new NotNull()
             ])
-            ->add('prenom', TextType::class, [
+            ->add('prenom', Assert\TextType::class, [
                 'label_attr' => [
                     'for' => 'inputFirstName',
                     'class' => 'form-label'
@@ -58,7 +54,7 @@ class RegisterType extends AbstractType
                     'class' => 'form-control'
                 ]
             ])
-            ->add('age', IntegerType::class, [
+            ->add('age', Assert\IntegerType::class, [
                 'label_attr' => [
                     'for' => 'inputAge',
                     'class' => 'form-label'
@@ -71,10 +67,10 @@ class RegisterType extends AbstractType
                 'required' => true,
                 'constraints' => [
                     new NotNull(message: 'Age requis'),
-                    new Positive(message: "L'age doit être positif")
+                    new Positive(message: "L'age ne peut pas être négatif")
                 ]
             ])
-            ->add('email', EmailType::class, [
+            ->add('email', Assert\EmailType::class, [
                 'label_attr' => [
                     'for' => 'inputEmail',
                     'class' => 'form-label'
@@ -90,18 +86,22 @@ class RegisterType extends AbstractType
                     new Email(message: 'Email invalide')
                 ]
             ])
-            ->add('mdp', PasswordType::class, [
+            ->add('mdp', Assert\RepeatedType::class, [
+                'type' => Assert\PasswordType::class,
+                'invalid_message' => 'Les mots de passes rentrés doivent être identique',
                 'label_attr' => [
                     'for' => 'inputMdp',
                     'class' => 'form-label'
                 ],
-                'attr' => [
-                    'id' => 'inputMdp',
-                    'class' => 'form-control'
-                ],
-                'label' => 'Mot de passe *',
+                'options' => [
+                    'attr' => [
+                        'id' => 'inputMdp',
+                        'class' => 'form-control'
+                        ]
+                    ],
+                'first_options' => ['label' => 'Mot de passe*'],
+                'second_options' => ['label' => 'Retapez le mot de passe*'],
                 'required' => true,
-                'constraints'=> new NotNull(message: 'Mot de passe requis')
             ])
             ->add('Enregistrer', SubmitType::class, [
                 'attr' => [

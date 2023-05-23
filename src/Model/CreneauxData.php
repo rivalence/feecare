@@ -8,4 +8,10 @@ class CreneauxData {
 
     /** @var \DateTime */
     public $timeCreneau;
+
+    /** @var string */
+    public $type;
+
+    /** @var int */
+    public $recurrence;
 }

@@ -28,7 +28,6 @@ export default class Like
             const modal = document.querySelector(".modal-like-" + this.dataset.idpost);
             const listLike = modal.querySelector("#list-like");
             const likeName = listLike.querySelector("li#" + res.userNom + ' ' + res.userPrenom);
-            console.log(listLike);
 
             if (likeName) likeName.remove();
             else {
