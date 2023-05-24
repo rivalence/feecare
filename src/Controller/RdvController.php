@@ -81,14 +81,12 @@ class RdvController extends AbstractController
                 $this->repository->removeRdv($rdvToRemove[0], $this->doctrine);
 
                 foreach ($rdvList as $rdv) {
-                    if($rdv[0]->getIdRdv() == $idRdvToRemove){
+                    if($rdv[0]->getIdRdv() == $idRdvToRemove['id']){   
                         $email = (new Email())
-                        ->from($user[0]->getEmail())
-                        ->to('valenceanotho10@gmail.com')
+                        ->to($rdv["email"])
                         ->subject('Rendez-vous annulé.')
-                        ->text("Votre rendez-vous du ". $rdv[0]->getDateRdv() ." vient d'être annulé par ".$user[0]->getNom(). " ".
-                        $user[0]->getPrenom().".")
-                        ->html('<p>See Twig integration for better HTML integration!</p>');
+                        ->html("<p>Votre rendez-vous du ". $rdv[0]->getDateRdv()->format("d-m-Y") ." à ".$rdv[0]->getTimeRdv()->format("H-i").
+                        " vient d'être annulé par ".$user[0]->getNom(). " ".$user[0]->getPrenom().".<p>");
 
                         $this->mailer->send($email);
                     }
@@ -136,14 +134,12 @@ class RdvController extends AbstractController
                     $this->repository->removeRdv($rdvToRemove[0], $this->doctrine);
 
                     foreach ($rdvList as $rdv) {
-                        if($rdv[0]->getIdRdv() == $idRdvToRemove){
+                        if($rdv[0]->getIdRdv() == $idRdvToRemove['id']){
                             $email = (new Email())
-                            ->from($user[0]->getEmail())
-                            ->to($rdv->email)
+                            ->to($rdv["email"])
                             ->subject('Rendez-vous annulé.')
-                            ->text("Votre rendez-vous du ". $rdv[0]->getDateRdv() ." vient d'être annulé par ".$user[0]->getNom(). " ".
-                            $user[0]->getPrenom().".")
-                            ->html('<p>See Twig integration for better HTML integration!</p>');
+                            ->html("<p>Votre rendez-vous du ". $rdv[0]->getDateRdv()->format("d-m-Y") ." à ".$rdv[0]->getTimeRdv()->format("H-i").
+                            " vient d'être annulé par ".$user[0]->getNom(). " ".$user[0]->getPrenom().".<p>");
     
                             $this->mailer->send($email);
                         }

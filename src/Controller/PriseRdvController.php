@@ -86,14 +86,12 @@ class PriseRdvController extends AbstractController
                 if (strcmp($check, 'ok') == 0){
                     $session->remove('name');
                     $this->addFlash('rdv_success', 'Rendez-vous ajouté avec succès !');
-                    // $email = (new Email())
-                    // ->from($user[0]->getEmail())
-                    // ->to($traitant[0]->getEmail())
-                    // ->subject('Rendez-vous annulé.')
-                    // ->text($user[0]->getNom(). " ".$user[0]->getPrenom(). " a pris rendez-vous avec vous.")
-                    // ->html('<p>See Twig integration for better HTML integration!</p>');
+                    $email = (new Email())
+                    ->to($traitant[0]->getEmail())
+                    ->subject('Rendez-vous ajouté.')
+                    ->html("<p>".$user[0]->getNom(). " ".$user[0]->getPrenom(). " a pris rendez-vous avec vous.</p>");
 
-                    // $mailer->send($email);
+                    $this->mailer->send($email);
 
                     //On supprime le créneau réservé pour le rendez-vous
                     $this->repository->removeCreneau($creneauChoisi[0], $this->doctrine);

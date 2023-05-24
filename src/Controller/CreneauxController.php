@@ -49,12 +49,12 @@ class CreneauxController extends AbstractController
             $creneau = new Creneaux();
             $creneau->setEducateurKey($user);
             $creneau->setTimeCreneau($creneauData->timeCreneau);
+            $creneau->setDateCreneau($creneauData->dateCreneau);
             //Type d'entrée de créneaux voulu
             if(!strcmp($creneauData->type, 'Semaine')){
                 for ($i=0; $i < $creneauData->recurrence; $i++) { 
-                    $creneau->setDateCreneau($creneauData->dateCreneau);
                     $result = $this->saveCreneau($creneau, $list_creneaux);
-                    if(strcmp($result, 'no')) {
+                    if(!strcmp($result, 'no')) {
                         $this->addFlash('creneau_save_fail', 'Erreur de sauvegarde... Veuillez rééssayer');
                         $this->redirectToRoute('app_creneaux');
                     } 
