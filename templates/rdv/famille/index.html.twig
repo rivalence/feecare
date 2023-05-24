@@ -39,7 +39,7 @@
 								<tr>
 									<td>{{ rdv.nom }}</td>
 									<td>{{ rdv.prenom }}</td>
-									<td>{{ rdv[0].dateRdv|date('d/M/y') }}</td>
+									<td>{{ rdv[0].dateRdv|date('d/M/Y') }}</td>
 									<td>{{ rdv[0].timeRdv|date('H:i') }}</td>
 									<td>{{ form_start(tab_form_view[i]) }}
 										{{ form_row(tab_form_view[i].id, {'attr' : { 'value' : rdv[0].idRdv }}) }}

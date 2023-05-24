@@ -40,13 +40,14 @@ class RdvController extends AbstractController
 
         //Contrôle du type de user et interface à renvoyer
         $pseudo = $user[0]->getUtilisateur();
-        if(strcmp($pseudo[0], 'F') == 0)    //interface famille
+        if(!strcmp($pseudo[0], 'F'))    //interface famille
         {    
+            //On stocke dans un tableau uniquement les rdvs NON-ASSURE
             $rdvListFetch = $this->repository->getRdvsFamille($user[0]->getIdUser());
             $rdvList = [];
 
             foreach ($rdvListFetch as $rdv) {
-                if(strcmp($rdv[0]->getStatut(), "ASSURE") == 0 ) continue;
+                if(!strcmp($rdv[0]->getStatut(), "ASSURE")) continue;
                 else array_push($rdvList, $rdv);
             }
 

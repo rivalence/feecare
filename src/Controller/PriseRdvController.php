@@ -67,9 +67,8 @@ class PriseRdvController extends AbstractController
             //Si le choix est fait
             if ($form->isSubmitted()){  
                 //Récupération des données du créneau
-                $idCreneau = $form->getData();
                 $creneauChoisi = new Creneaux();
-                $creneauChoisi = $this->repository->getCreneauChoisi($idCreneau["id"]);
+                $creneauChoisi = $this->repository->getCreneauChoisi($choix_creneau->id);
 
                 //On récupère toutes les données du traitant
                 $traitant = new Users();
@@ -102,10 +101,7 @@ class PriseRdvController extends AbstractController
                     return $this->redirectToRoute('app_traiter');
                 } else {
                     $this->addFlash('rdv_fail', $check);
-                    return $this->render('prise_rdv/index.html.twig', [
-                        'tab_form' => $tabFormView,
-                        'creneaux' => $creneaux
-                    ]);
+                    return $this->redirectToRoute('app_prise_rdv');
                 }
             }
         }

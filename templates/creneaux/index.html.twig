@@ -48,7 +48,7 @@
                             {% set i = 0 %}
                             {% for creneau in list_creneaux %}
                                 <tr>
-                                    <td>{{ creneau.dateCreneau|date('d/m/Y') }}</td>
+                                    <td>{{ creneau.dateCreneau|date('d/M/Y') }}</td>
                                     <td>{{ creneau.timeCreneau|date('H:i') }}</td>
                                     <td> {{ form_start(tab_form_view[i]) }} 
                                             {{ form_row(tab_form_view[i].id, {'attr' : { 'value' : creneau.idCreneau }}) }}
