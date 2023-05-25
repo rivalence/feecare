@@ -1,22 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
   <entity name="App\Entity\Centre" table="centre">
-    <indexes>
-      <index name="IDX_C6A0EA756186CA22" columns="user_key"/>
-    </indexes>
-    <id name="idCentre" type="integer" column="id_centre">
+    <id name="id" type="integer" column="id">
       <generator strategy="SEQUENCE"/>
-      <sequence-generator sequence-name="centre_id_centre_seq" allocation-size="1" initial-value="1"/>
+      <sequence-generator sequence-name="centre_id_seq" allocation-size="1" initial-value="1"/>
     </id>
-    <field name="capacites" type="text" column="capacites" nullable="true">
+    <field name="nom" type="string" column="nom" length="20" nullable="false">
       <options>
         <option name="fixed"/>
       </options>
     </field>
-    <many-to-one field="userKey" target-entity="Users" fetch="LAZY">
-      <join-columns>
-        <join-column name="user_key" referenced-column-name="id_user"/>
-      </join-columns>
-    </many-to-one>
+    <field name="email" type="string" column="email" length="25" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="tel" type="string" column="tel" length="15" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="adresse" type="string" column="adresse" length="50" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="zip" type="string" column="zip" length="6" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="ville" type="string" column="ville" length="20" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="latitude" type="string" column="latitude" length="15" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="longitude" type="string" column="longitude" length="15" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="capacite" type="text" column="capacite" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
   </entity>
 </doctrine-mapping>

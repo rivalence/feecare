@@ -13,9 +13,10 @@ import ModalComment from './scripts/modal-comment';
 import ModalLike from './scripts/modal-like';
 import ShowPosts from './scripts/showPosts';
 import ShowRecurrenceCreneau from './scripts/showRecurenceCreneau';
-
 import 'bootstrap';
 import ShowImg from './scripts/showImg';
+import Carte from './scripts/map';
+
 document.addEventListener('DOMContentLoaded', () => {
     const likeElements = [].slice.call(document.querySelectorAll('a[data-action="like"]'));
     const commentElements = [].slice.call(document.querySelectorAll('form[data-action="comment"]'));
@@ -24,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const showPosts = [].slice.call(document.querySelectorAll('div[data-hidden="true"]'));
     const images = [].slice.call(document.querySelectorAll('#show-img'));
     const type_creneau = document.querySelector("#creneaux_type");
+    const map = document.querySelector("#map");
 
     if (likeElements) new Like(likeElements);
 
@@ -38,4 +40,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (images) new ShowImg(images)
 
     if(type_creneau) new ShowRecurrenceCreneau(type_creneau);
+
+    if(map) new Carte(map);
 });

@@ -1,0 +1,41 @@
+{% extends 'base-map.html.twig' %}
+
+{% block title %}Centres - Feecare{% endblock %}
+
+{% block body %}
+
+<div class="container mb-4 d-flex justify-content-evenly">
+    <h1>NOS CENTRES</h1>
+</div>
+
+<div class="row">
+    <div class="container col-8" id="map">
+    </div>
+
+    <div class="col-4 container">
+        <ul class="list-group">
+            {% for centre in centres %}
+                <li class="list-group-item text-center" style="cursor: pointer;">
+                    <div class="row">
+                        <div class="col bg-primary-subtle border border-dark">
+                            <a style="text-decoration: none;" href="{{ path('app_centre_data', {id: centre.id}) }}" id="centre">
+                                <div>
+                                    {{ centre.nom }}
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col bg-primary-subtle border border-dark">
+                            <a href="{{ path('app_centre_data', {id: centre.id}) }}" style="text-decoration: none;" id="itineraire">
+                                <div>
+                                    Y aller
+                                </div> 
+                            </a>
+                        </div>
+                    </div>  
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+{% endblock %}

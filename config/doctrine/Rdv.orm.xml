@@ -2,8 +2,8 @@
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
   <entity name="App\Entity\Rdv" table="rdv">
     <indexes>
-      <index name="IDX_10C31F866971227" columns="educateur_key"/>
       <index name="IDX_10C31F86B062378" columns="famille_key"/>
+      <index name="IDX_10C31F866971227" columns="educateur_key"/>
     </indexes>
     <id name="idRdv" type="integer" column="id_rdv">
       <generator strategy="SEQUENCE"/>
@@ -16,14 +16,14 @@
         <option name="fixed"/>
       </options>
     </field>
-    <many-to-one field="educateurKey" target-entity="Users" fetch="LAZY">
-      <join-columns>
-        <join-column name="educateur_key" referenced-column-name="id_user"/>
-      </join-columns>
-    </many-to-one>
     <many-to-one field="familleKey" target-entity="Users" fetch="LAZY">
       <join-columns>
         <join-column name="famille_key" referenced-column-name="id_user"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="educateurKey" target-entity="Users" fetch="LAZY">
+      <join-columns>
+        <join-column name="educateur_key" referenced-column-name="id_user"/>
       </join-columns>
     </many-to-one>
   </entity>

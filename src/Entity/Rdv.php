@@ -64,24 +64,24 @@ class Rdv
      */
     private $educateurKey;
 
-    public function getDateRdv(): ?\DateTimeInterface
+    public function getDateRdv(): ?\DateTime
     {
         return $this->dateRdv;
     }
 
-    public function setDateRdv(?\DateTimeInterface $dateRdv): self
+    public function setDateRdv(?\DateTime $dateRdv): self
     {
         $this->dateRdv = $dateRdv;
 
         return $this;
     }
 
-    public function getTimeRdv(): ?\DateTimeInterface
+    public function getTimeRdv(): ?\DateTime
     {
         return $this->timeRdv;
     }
 
-    public function setTimeRdv(?\DateTimeInterface $timeRdv): self
+    public function setTimeRdv(?\DateTime $timeRdv): self
     {
         $this->timeRdv = $timeRdv;
 
