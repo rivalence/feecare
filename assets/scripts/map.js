@@ -77,6 +77,7 @@ export default class Carte {
                             .then(res => res.json())
                             .then(res => {
                                 const centre_position = new L.LatLng(res.lat, res.lng);
+
                                 //Routing
                                 L.Routing.control({
                                     waypoints: [
@@ -85,11 +86,15 @@ export default class Carte {
                                     ],
                                     router: new L.Routing.osrmv1({
                                         language: 'fr',
-                                        profile: 'car'
+                                        profile: 'car',
                                     }),
                                     routeWhileDragging: true,
                                     geocoder: L.Control.Geocoder.nominatim()
                                 }).addTo(carte);
+
+                                //Rajout du marqueur du centre selectionné
+                                const marker = L.marker(centre_position).addTo(carte);
+                                marker.bindPopup("<b>Centre de "+ res.nom+ "</b><br>"+ res.lat +", "+ res.lng);
                             })
                         })
                     })
