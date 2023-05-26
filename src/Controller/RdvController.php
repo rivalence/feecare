@@ -78,7 +78,6 @@ class RdvController extends AbstractController
             if ($tabForm && $tabForm[0]->isSubmitted()){
                 $idRdvToRemove = $tabForm[0]->getData();
                 $rdvToRemove = $this->repository->getRdv($idRdvToRemove['id']);
-                $this->repository->removeRdv($rdvToRemove[0], $this->doctrine);
 
                 foreach ($rdvList as $rdv) {
                     if($rdv[0]->getIdRdv() == $idRdvToRemove['id']){  
@@ -92,7 +91,7 @@ class RdvController extends AbstractController
                     }
                 }
                 
-                
+                $this->repository->removeRdv($rdvToRemove[0], $this->doctrine);
                 return $this->redirectToRoute('app_rdv');
             }
             
@@ -131,7 +130,6 @@ class RdvController extends AbstractController
                 if ($form->isSubmitted() && $form->isValid()){
                     $idRdvToRemove = $form->getData();
                     $rdvToRemove = $this->repository->getRdv($idRdvToRemove['id']);
-                    $this->repository->removeRdv($rdvToRemove[0], $this->doctrine);
 
                     foreach ($rdvList as $rdv) {
                         if($rdv[0]->getIdRdv() == $idRdvToRemove['id']){
@@ -145,6 +143,7 @@ class RdvController extends AbstractController
                         }
                     }
                     
+                    $this->repository->removeRdv($rdvToRemove[0], $this->doctrine);
                     return $this->redirectToRoute('app_rdv');
                 }
                 $i++;
