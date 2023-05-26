@@ -73,13 +73,13 @@ class CreneauxController extends AbstractController
                 $result = $this->saveCreneau($creneau, $list_creneaux);
 
                 //Rediriger direct sur la page creneau si erreur
-                if(strcmp($result, 'no')) {
+                if(!strcmp($result, 'no')) {
                     $this->addFlash('creneau_save_fail', 'Erreur de sauvegarde... Veuillez rééssayer');
-                    $this->redirectToRoute('app_creneaux');
+                    return $this->redirectToRoute('app_creneaux');
                 }
 
                 $this->addFlash('creneau_ajoute', 'Disponibilités mises à jour !'); //Message d'alerte
-                $this->redirectToRoute('app_creneaux');
+                return $this->redirectToRoute('app_creneaux');
             }
         }
 
