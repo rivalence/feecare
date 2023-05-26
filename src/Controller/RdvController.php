@@ -81,7 +81,7 @@ class RdvController extends AbstractController
                 $this->repository->removeRdv($rdvToRemove[0], $this->doctrine);
 
                 foreach ($rdvList as $rdv) {
-                    if($rdv[0]->getIdRdv() == $idRdvToRemove['id']){   
+                    if($rdv[0]->getIdRdv() == $idRdvToRemove['id']){  
                         $email = (new Email())
                         ->to($rdv["email"])
                         ->subject('Rendez-vous annulé.')
