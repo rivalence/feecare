@@ -45,7 +45,6 @@ class CreneauxController extends AbstractController
         $list_creneaux = $this->repository->fetchCreneaux($educateurKey);
 
         if($form->isSubmitted() && $form->isValid()){
-            //Type d'entrée de créneaux voulu
             if(strcmp($creneauData->type, 'Semaine') == 0){
                 for ($i=0; $i < $creneauData->recurrence; $i++) {
                     //Création de l'entité créneau à sauver

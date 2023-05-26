@@ -41,15 +41,14 @@ class CreneauxType extends AbstractType
             ])
             ->add('type', Assert\ChoiceType::class, [
                 'choices' => [
-                    'Journalier' => 'Jour',
-                    'Hebdomadaire' => 'Semaine'
+                    "Juste aujourd'hui" => 'Jour',
+                    'Par semaine' => 'Semaine'
                 ],
-                'empty_data' => 'Semaine',
                 'attr' => [
                     'class' => 'form-select',
                     'id' => 'type-dispo',
                 ],
-                'label' => 'Type de disponibilté'
+                'label' => 'Repeter'
             ])
             ->add('recurrence', Assert\ChoiceType::class, [
                 'choices' => [
