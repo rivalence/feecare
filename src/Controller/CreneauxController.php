@@ -45,25 +45,24 @@ class CreneauxController extends AbstractController
         $list_creneaux = $this->repository->fetchCreneaux($educateurKey);
 
         if($form->isSubmitted() && $form->isValid()){
-            //Création de l'entité créneau à sauver
-            $creneau = new Creneaux();
-            $creneau->setEducateurKey($user);
-            $creneau->setTimeCreneau($creneauData->timeCreneau);
-            //Type d'entrée de créneaux voulu
-            if(!strcmp($creneauData->type, 'Semaine')){
-                for ($i=0; $i < $creneauData->recurrence; $i++) { 
-                    $creneau->setDateCreneau($creneauData->dateCreneau);
+            if(strcmp($creneauData->type, 'Semaine') == 0){
+                for ($i=0; $i < $creneauData->recurrence; $i++) {
+                    //Création de l'entité créneau à sauver
+                    $creneau = new Creneaux();
+                    $creneau->setEducateurKey($user);
+                    $creneau->setTimeCreneau($creneauData->timeCreneau);
+                    $creneau->setDateCreneau($creneauData->dateCreneau); 
                     $result = $this->saveCreneau($creneau, $list_creneaux);
-                    if(strcmp($result, 'no')) {
+                    if(strcmp($result, 'no') == 0) {
                         $this->addFlash('creneau_save_fail', 'Erreur de sauvegarde... Veuillez rééssayer');
-                        $this->redirectToRoute('app_creneaux');
-                    } 
+                        return $this->redirectToRoute('app_creneaux');
+                    }
 
-                    $creneau->setDateCreneau($creneau->getDateCreneau()->modify("+1 weeks"));
+                    $creneauData->dateCreneau = $creneauData->dateCreneau->modify("+1 weeks");
                 }
 
                 $this->addFlash('creneau_ajoute', 'Disponibilités mises à jour !'); //Message d'alerte
-                $this->redirectToRoute('app_creneaux');
+                return $this->redirectToRoute('app_creneaux');
             }
             else {
                 //Création de l'entité créneau à sauver
